@@ -1,22 +1,44 @@
-%% classifiersPredict: predict on "X_test" with a set of classifiers.
+%% classifiersPredict: predict on test set and out-of-bag with a set of classifiers.
+%% X: data set.
 %% X_test: the test set.
-%% classifiers: the set of classifiers
-%% return the predictions for the set of classifiers.
+%% classifiers: the set of classifiers.
+%% oob: the out-of-bag for each classifier.
+%% return the predictions with the test set and out-of-bag.
 
-function predictions = classifiersPredict(X_test, classifiers)
+function [predictions, oobPredictions] = classifiersPredict(X, X_test, classifiers, oob)
 
-    [m, n] = size(X_test);
+    [m, n] = size(X);
+    [mTest, nTest] = size(X_test);
     K = size(classifiers, 2);
 
-    label = zeros(m, K);
-    for i = 1:K
-        label(:, i) = labeld(X_test, classifiers{i});
-    end
+    % prediction for X_test
+    tic
+        label = zeros(mTest, K);
+        for i = 1:K
+            % label for each classifier
+            label(:, i) = labeld(X_test, classifiers{i});
+        end
 
-    predictions = zeros(m, 1);
-    for j = 1:m
-        [nbOccurence, labelOcc] = hist(label(j, :), unique(label(j, :)));
-        [val, ind] = max(nbOccurence);
-        predictions(j, 1) = labelOcc(ind);
-    end
+        % find the best prediction for each data among the labels
+        predictions = argMax(label);
+    toc
+
+    % prediction for out-of-bag
+    tic
+        oobPredictions = zeros(m, 1);
+        nClasses = max(X.nlab); % the number of different labels
+        % for each data, we take the out-of-bags which contain this data. Then for each out-of-bag, we calculate its prediction thanks the classifier corresponding with the out-of-bag.
+        for i = 1:m
+            votes = zeros(1, nClasses);
+            for j = 1:K
+                if (isempty(find(X.data(oob{:, j}) == X.data(i, 1))) == 0) % if data "i" in out-of-bag "j"
+                    prediction = labeld(X.data(i, :), classifiers{j});
+                    votes(1, prediction) = votes(1, prediction) + 1;
+                end
+            end
+            % majority vote
+            [val, ind] = max(votes);
+            oobPredictions(i, 1) = ind;
+        end
+    toc
 end

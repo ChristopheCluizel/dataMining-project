@@ -38,9 +38,15 @@ data = prdataset(synth4.X, synth4.Y);
 [mDs, nDs] = size(X_test);
 
 K = 10; % the number of classifiers
-treeClassifiers = classifiersLearning(X, K);
+
+% learn the classifiers
+[treeClassifiers, treeOob] = classifiersLearning(X, K);
 
 % estimating the test error rates for the trained classifiers
 errTree = testc(X_test, treeClassifiers);
 fprintf('Mean error for the sets of tree classifiers: %f\n', mean(cell2mat(errTree)))
-fprintf('Error for Baggin method with tree classifiers: %f\n', classifiersTest(X_test, treeClassifiers))
+
+% calculate errors from the classifiers
+[testError, oobError] = classifiersTest(X, X_test, treeClassifiers, treeOob);
+fprintf('Error on X_test for Baggin method with tree classifiers: %f\n', testError);
+fprintf('Error on "Out of bag" for Baggin method with tree classifiers: %f\n', oobError);
