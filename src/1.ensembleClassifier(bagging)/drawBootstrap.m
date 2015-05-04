@@ -1,6 +1,6 @@
 %% drawBootstrap: function description
-function [bag, oob] = drawBootstrap(nTot, nEchan)
+function [bag, oob] = drawBootstrap(nTotal, nbTirage)
 
-	bag = randi(nTot, 1, nEchan);
-	oob = setdiff([1:nTot], bag);
+	bag = randi(nTotal, nbTirage, 1);
+	oob = setdiff([1:nTotal], bag)';
 end
