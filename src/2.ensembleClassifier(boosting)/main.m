@@ -1,55 +1,55 @@
 clear; close all
 
-data = load('datasets/diabetes.mat');
+% ============ AdaBoost ==============
+% loading a given datasets.
+% The mat files have been generated so that it contains a structure with 2 members:
+%  - X: a n by d matrix that contains the input values
+%  - Y: a column vector of n labels 0 or 1
+data = load('../../resources/datasets/diabetes.mat');
 
+% transform all labels 0 in label -1
 data.Y(data.Y == 0) = -1;
 
-T = 1000;
-[xapp, yapp, xtest, ytest] = splitdata(data.X, data.Y, 0.7);
+% split the data
+[dataApp.X, dataApp.Y, dataTest.X, dataTest.Y] = splitdata(data.X, data.Y, 0.7);
+
+T = 10; % the number of classifiers
+
+% create a new structure and learn
+[classifiers, weights] = adaboostLearn(dataApp, T);
+
+predictions = adaboostPred(classifiers, weights, dataTest.X);
+testError = length(find(predictions ~= dataTest.Y)) / length(predictions) * 100;
+
+fprintf('Error on dataTest for AdaBoost method with binary stamp classifiers: %f\n', testError);
+
+% %% adaboost.M1
+
+% data = load('datasets/synth4.mat');
+
+% T = 10;
+% [xApp, yapp, xtest, ytest] = splitdata(data.X, data.Y, 0.7);
 
 
-data.X = xapp;
-data.Y = yapp;
-[classifieurs, poids] = adaboost(data, T);
+% data.X = xapp;
+% data.Y = yapp;
+% [classifieurs, poids] = adaboostM1(data, T);
 
-[ntest, p] = size(xtest);
-predictions = zeros(T, ntest);
-for i = 1:T
-	predictions(i, :) = souchebinaireval(classifieurs{i}, xtest);
-end
+% [ntest, p] = size(xtest);
+% predictions = zeros(T, ntest);
+% for i = 1:T
+% 	predictions(i, :) = souchebinaireval(classifieurs{i}, xtest);
+% end
 
+% C = 4;
+% yTestPreditChaqueClasse = zeros(C, ntest);
+% for k = 1:C
+% 	predictionsK = predictions == k;
+% 	yTestPreditChaqueClasse(k, :) = (predictionsK' * cell2mat(poids)')';
+% end
 
-yTestPredit = sign(predictions' * cell2mat(poids)');
-erreur = length(find(yTestPredit ~= ytest)) / ntest * 100
+% [val, yTestPredit] = max(yTestPreditChaqueClasse);
+% yTestPredit = yTestPredit';
 
-
-%% adaboost.M1
-
-data = load('datasets/synth4.mat');
-
-T = 10;
-[xapp, yapp, xtest, ytest] = splitdata(data.X, data.Y, 0.7);
-
-
-data.X = xapp;
-data.Y = yapp;
-[classifieurs, poids] = adaboostM1(data, T);
-
-[ntest, p] = size(xtest);
-predictions = zeros(T, ntest);
-for i = 1:T
-	predictions(i, :) = souchebinaireval(classifieurs{i}, xtest);
-end
-
-C = 4;
-yTestPreditChaqueClasse = zeros(C, ntest);
-for k = 1:C
-	predictionsK = predictions == k;
-	yTestPreditChaqueClasse(k, :) = (predictionsK' * cell2mat(poids)')';
-end
-
-[val, yTestPredit] = max(yTestPreditChaqueClasse);
-yTestPredit = yTestPredit';
-
-% [ind, yTestPredit] = max(predictions' * cell2mat(poids)');
-erreurM1 = length(find(yTestPredit ~= ytest)) / ntest * 100
+% % [ind, yTestPredit] = max(predictions' * cell2mat(poids)');
+% erreurM1 = length(find(yTestPredit ~= ytest)) / ntest * 100
