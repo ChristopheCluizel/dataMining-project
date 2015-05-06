@@ -15,6 +15,7 @@ function [classifiers, theta] = adaboostM1Learn(data, T)
 	weight = ones(n, 1) ./ n;
 
 	for t = 1:T
+		fprintf('Compute classifier %d\n', t);
 		weightData = gendatw(data, weight, 10 * n);
 
 		classifiers{t} = stumpc(weightData);
@@ -27,7 +28,11 @@ function [classifiers, theta] = adaboostM1Learn(data, T)
 
 		% compute new weights
 		for i = 1:n
-			weight(i) = weight(i) * exp(theta{t} * (trueLabels(i) ~= predictions(i)));
+			if trueLabels(i) == predictions(i)
+				weight(i) = weight(i) * exp(-theta{t});
+			else
+				weight(i) = weight(i) * exp(theta{t});
+			end
 		end
 		sumWeight = sum(weight);
 		weight = weight ./ sumWeight;
