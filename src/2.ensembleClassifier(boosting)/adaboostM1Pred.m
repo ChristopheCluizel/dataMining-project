@@ -1,21 +1,24 @@
 %% adaboostPred: predict labels
-function Y = adaboostPred(classifiers, weights, X)
+function Y = adaboostPred(classifiers, weights, data)
 
-	[n, p] = size(X);
-	predictions = zeros(T, n);
+	[n, p] = size(data);
+	T = length(classifiers);
+	C = length(unique(data.nlab));
+
+	labelPredictions = zeros(T, n);
 	for i = 1:T
-		predictions(i, :) = souchebinaireval(classifieurs{i}, X);
+		labelPredictions(i, :) = labeld(data, classifiers{i});
 	end
 
-	C = 4;
-	yTestPreditChaqueClasse = zeros(C, n);
+	predictionWeightForEachClass = zeros(C, n);
+	weightsMatrix = repmat(cell2mat(weights), [n, 1])';
 	for k = 1:C
-		predictionsK = predictions == k;
-		yTestPreditChaqueClasse(k, :) = (predictionsK' * cell2mat(poids)')';
+		booleanPredictions{k} = labelPredictions == k;
+		predictionWeightForEachClass(k, :) = sum(booleanPredictions{k} .* weightsMatrix);
 	end
 
-	[val, yTestPredit] = max(yTestPreditChaqueClasse);
-	yTestPredit = yTestPredit';
+	[val, Y] = max(predictionWeightForEachClass);
+	Y = Y';
 end
 
 

@@ -16,7 +16,7 @@ function [classifiers, theta] = adaboostLearn(data, T)
 	for t = 1:T
 		weightData = gendatw(data, weight, 100 * n);
 
-		classifiers{t} = stumpc(weightData, 'maxcrit', 2);
+		classifiers{t} = stumpc(weightData);
 		predictions = labeld(data, classifiers{t});
 		trueLabels = getlabels(data);
 

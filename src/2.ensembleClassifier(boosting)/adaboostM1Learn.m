@@ -8,22 +8,28 @@
 
 function [classifiers, theta] = adaboostM1Learn(data, T)
 
-	[n, p] = size(data.X);
-	C = length(unique(data.Y));
-	weights = ones(n, 1) ./ n;
+	[n, p] = size(data);
+	C = length(unique(data.nlab));
+
+	% intialize weights
+	weight = ones(n, 1) ./ n;
 
 	for t = 1:T
-		classifiers{t} = souchebinairetrain(data.X, data.Y, weights);
+		weightData = gendatw(data, weight, 10 * n);
 
-		predictions = souchebinaireval(classifiers{t}, data.X);
-		epsilon{t} = sum(weights(predictions ~= data.Y));
+		classifiers{t} = stumpc(weightData);
+		predictions = labeld(data, classifiers{t});
+		trueLabels = getlabels(data);
+
+		epsilon{t} = sum(weight(predictions ~= trueLabels));
 
 		theta{t} = log((C - 1) * (1 - epsilon{t}) / epsilon{t});
 
+		% compute new weights
 		for i = 1:n
-			weights(i) = weights(i) * theta{t} * (predictions(i) ~= data.Y(i));
+			weight(i) = weight(i) * exp(theta{t} * (trueLabels(i) ~= predictions(i)));
 		end
-		sumWeights = sum(weights);
-		weights = weights ./ sumWeights;
+		sumWeight = sum(weight);
+		weight = weight ./ sumWeight;
 	end
 end
