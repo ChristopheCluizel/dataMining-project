@@ -1,6 +1,6 @@
-%% adaboostLearn: train "T" classifiers on data
+%% adaboostLearn: train "T" classifiers on data with AdaBoost method
 %%
-%% data: the data to learn with (X and Y).
+%% data: prtools dataset to learn.
 %% T: the number of classifiers to train.
 %% return
 %%      classifiers: the set of classifiers for the "tree" implementation.
@@ -8,22 +8,25 @@
 
 function [classifiers, theta] = adaboostLearn(data, T)
 
-	[n, p] = size(data.X);
+	[n, p] = size(data);
 
 	% intialize weights
 	weight = ones(n, 1) ./ n;
 
 	for t = 1:T
-		classifiers{t} = souchebinairetrain(data.X, data.Y, weight);
+		weightData = gendatw(data, weight, 100 * n);
 
-		predictions = souchebinaireval(classifiers{t}, data.X);
-		epsilon{t} = sum(weight(predictions ~= data.Y));
+		classifiers{t} = stumpc(weightData, 'maxcrit', 2);
+		predictions = labeld(data, classifiers{t});
+		trueLabels = getlabels(data);
+
+		epsilon{t} = sum(weight(predictions ~= trueLabels));
 
 		theta{t} = 1/2 * log((1 - epsilon{t}) / epsilon{t});
 
 		% compute new weights
 		for i = 1:n
-			weight(i) = weight(i) * exp(-theta{t} * data.Y(i) * predictions(i));
+			weight(i) = weight(i) * exp(-theta{t} * trueLabels(i) * predictions(i));
 		end
 		sumWeight = sum(weight);
 		weight = weight ./ sumWeight;

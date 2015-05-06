@@ -1,12 +1,12 @@
 %% adaboostPred: predict labels
-function Y = adaboostPred(classifiers, weights, X)
+function Y = adaboostPred(classifiers, weights, data)
 
-	[n, p] = size(X);
+	[n, p] = size(data);
 	T = length(classifiers);
 
 	predictions = zeros(T, n);
 	for i = 1:T
-		predictions(i, :) = souchebinaireval(classifiers{i}, X);
+		predictions(i, :) = labeld(data, classifiers{i});
 	end
 
 	Y = sign(predictions' * cell2mat(weights)');

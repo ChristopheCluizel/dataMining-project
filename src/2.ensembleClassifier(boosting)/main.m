@@ -5,10 +5,32 @@ clear; close all
 % The mat files have been generated so that it contains a structure with 2 members:
 %  - X: a n by d matrix that contains the input values
 %  - Y: a column vector of n labels 0 or 1
-data = load('../../resources/datasets/diabetes.mat');
+% rawData = load('../../resources/datasets/diabetes.mat');
+rawData = load('../../resources/datasets/ionosphere.mat');
 
-% transform all labels 0 in label -1
-data.Y(data.Y == 0) = -1;
+% creation of prtools dataset
+data = prdataset(rawData.X, rawData.Y);
+[dataApp, dataTest] = gendat(data, 0.6);
+
+T = 100; % the number of classifiers
+
+% create a new structure and learn
+[classifiers, weights] = adaboostLearn(dataApp, T);
+
+predictions = adaboostPred(classifiers, weights, dataTest);
+trueLabels = getlabels(dataTest);
+
+testError = length(find(predictions ~= trueLabels)) / length(predictions) * 100;
+
+fprintf('Error on dataTest for AdaBoost method with binary stamp classifiers: %f\n', testError);
+
+clear; close all;
+% ============ AdaBoost.M1 ==============
+% loading a given datasets.
+% The mat files have been generated so that it contains two matrices:
+%  - X: a n by d matrix that contains the input values
+%  - Y: a column vector of n output values (class indexes)
+data = load('../../resources/datasets/synth4.mat');
 
 % split the data
 [dataApp.X, dataApp.Y, dataTest.X, dataTest.Y] = splitdata(data.X, data.Y, 0.7);
@@ -16,14 +38,12 @@ data.Y(data.Y == 0) = -1;
 T = 10; % the number of classifiers
 
 % create a new structure and learn
-[classifiers, weights] = adaboostLearn(dataApp, T);
+[classifiers, weights] = adaboostM1Learn(dataApp, T);
 
 predictions = adaboostPred(classifiers, weights, dataTest.X);
 testError = length(find(predictions ~= dataTest.Y)) / length(predictions) * 100;
 
-fprintf('Error on dataTest for AdaBoost method with binary stamp classifiers: %f\n', testError);
-
-% %% adaboost.M1
+fprintf('Error on dataTest for AdaBoost.M1 method with binary stamp classifiers: %f\n', testError);
 
 % data = load('datasets/synth4.mat');
 
