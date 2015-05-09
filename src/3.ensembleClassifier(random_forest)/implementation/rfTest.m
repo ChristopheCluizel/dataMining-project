@@ -1,6 +1,3 @@
-
-
-
 function res = rfTest(D,forest)
 	
 	res.proba = rfPredict(D.data,forest);

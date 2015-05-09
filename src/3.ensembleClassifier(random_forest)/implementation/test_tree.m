@@ -4,7 +4,7 @@ clear all;
 close all;
 clc;
 
-synth4 = load('./data/synth4.mat');
+synth4 = load('../../../resources/datasets/synth4.mat');
 D = prdataset(synth4.X,synth4.Y);
 [Dr,Ds] = gendat(D,0.3);
 

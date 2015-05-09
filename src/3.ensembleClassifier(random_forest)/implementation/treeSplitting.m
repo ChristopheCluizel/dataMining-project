@@ -1,4 +1,3 @@
-
 %%  Finds and returns a splitting rule that allows to partition
 %   an internal node of a decision tree, using the random feature selection
 %	procedure. This function is meant to be used in a random tree growing procedure

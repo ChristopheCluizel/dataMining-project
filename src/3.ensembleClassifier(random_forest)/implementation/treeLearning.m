@@ -1,6 +1,3 @@
-
-
-
 %% function tree = treeLearning(D,rndFeat)  
 %
 %   grow a (random) tree classifier with the CART method combined with

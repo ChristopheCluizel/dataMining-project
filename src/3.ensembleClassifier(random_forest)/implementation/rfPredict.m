@@ -1,12 +1,10 @@
+function probas = rfPredict(X,forest)
 
-
-function proba = rfPredict(X,forest)
-
-	probas = zeros(forest.nbTrees, ); %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	probas = zeros(length(X), 2); %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	for i = 1:forest.nbTrees
-		probas(i) = treePredict(X,forest.trees{i});
+		probas = probas + treePredict(X,forest.trees{i});
 	end
 
-	proba = mean(probas);
+	probas = probas / forest.nbTrees;
 end

@@ -1,5 +1,3 @@
-
-
 function proba = treePredict(X,tree)
 	for i=1:size(X,1)
 		proba(i,:) = recursPredict(X(i,:),tree);

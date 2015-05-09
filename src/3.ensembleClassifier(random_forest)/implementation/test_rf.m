@@ -4,7 +4,7 @@ clear all;
 close all;
 clc;
 
-data = load('data/diabetes.mat');
+data = load('../../../resources/datasets/diabetes.mat');
 D = prdataset(data.X,data.Y);
 [Dr,Ds] = gendat(D,0.66);
 
