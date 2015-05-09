@@ -24,9 +24,6 @@ T = 100; % Nombre de classifieurs que l'on veut apprendre.
 learningType = 'tree';
 [classifiers, weights] = adaboostM1Learn(dataApp, T, learningType);
 
-% Prédiction via l'ensemble de classifieur sur les données de test.
-predictions = adaboostM1Pred(classifiers, weights, dataTest);
+testError = adaboostM1Test(dataTest, classifiers, weights);
 
-% Calcul du nombre d'erreurs par rapport aux vraies étiquettes.
-testError = sum(predictions ~= getlabels(dataTest)) / length(predictions) * 100;
 fprintf('Error on dataTest for AdaBoost.M1 method with %s classifiers: %f\n', learningType, testError);

@@ -27,12 +27,6 @@ T = 100; % Nombre de classifieurs que l'on veut apprendre.
 learningType = 'tree';
 [classifiers, weights] = adaboostLearn(dataApp, T, learningType);
 
-% Prédiction via l'ensemble de classifieur sur les données de test.
-predictions = adaboostPred(classifiers, weights, dataTest);
+testError = adaboostTest(dataTest, classifiers, weights);
 
-% Récupération depuis le PRDataSet des vrais label.
-trueLabels = getlabels(dataTest);
-
-% Calcul du nombre d'erreurs par rapport aux vraies étiquettes.
-testError = sum(predictions ~= trueLabels) / length(predictions) * 100;
 fprintf('Error on dataTest for AdaBoost method with %s classifiers: %f\n', learningType, testError);
