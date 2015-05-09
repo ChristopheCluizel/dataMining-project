@@ -27,6 +27,7 @@
 %				a bootstrap sample
 %		.oob : a row cellarray with L cells, each of which containing 
 %				the corresponding out-of-bag sets
+%		.nbClasses : number of classes 
 function forest = rfLearning(D,L,rndFeat)
 
 	islabtype(D,'crisp');
@@ -42,6 +43,7 @@ function forest = rfLearning(D,L,rndFeat)
 	forest.learningMethod = 'Forest-RI';
 	forest.nbTrees = L;
 	forest.rndFeat = rndFeat;
+	forest.nbClasses = length(unique(getlabels(D)));
 
 	forest.trees = cell(L, 1);
 	forest.boot = cell(L, 1);
