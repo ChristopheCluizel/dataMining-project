@@ -1,3 +1,8 @@
+%% Calculate the error rate on data with a random forest
+%% D: the data set
+%% forest: the random forest learned
+%% return the error rate
+
 function res = rfTest(D, forest)
 
 	res.proba = rfPredict(D.data,forest);

@@ -17,7 +17,8 @@ fprintf('We will use %d classifiers.\n', K);
 % try several value of random features
 for k = 1:2:7
 	err = [];
-	for i=1:5
+  % for each number of random features, launch the algo several times to make an average on the error
+	for i = 1:5
 		tic; forest = rfLearning(Dr, K, k); toc;
 		res = rfTest(Ds, forest);
 		err = [err (res.errRate * 100)];
