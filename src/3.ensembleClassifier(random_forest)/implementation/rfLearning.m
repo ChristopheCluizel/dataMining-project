@@ -1,6 +1,3 @@
-
-
-
 %% function forest = rfLearning(D,L,rndFeat)
 %
 %   grows a random forest classifier with the Forest-RI algorithm.
