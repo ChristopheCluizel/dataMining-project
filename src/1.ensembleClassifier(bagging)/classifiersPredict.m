@@ -25,7 +25,7 @@ function [predictions, oobPredictions] = classifiersPredict(X, X_test, classifie
     toc
 
     % prediction for out-of-bag
-    fprintf('remark: the prediction for the out-of-bag takes some time (~40s)\n');
+    fprintf('remark: the prediction for the out-of-bag takes some time (~40s) for K = 10\n');
     fprintf('Time for prediction for the out-of-bag sets: ');
     tic
         oobPredictions = zeros(m, 1);

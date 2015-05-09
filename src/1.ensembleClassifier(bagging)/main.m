@@ -30,7 +30,9 @@ fprintf('\n\n============ Bagging =========== \n');
 % The mat files have been generated so that it contains two matrices:
 %  - X: a n by d matrix that contains the input values
 %  - Y: a column vector of n output values (class indexes)
-synth4 = load('../../resources/datasets/synth4.mat');
+fileName = 'synth4.mat';
+synth4 = load(strcat('../../resources/datasets/', fileName));
+fprintf('Dataset used: %s\n', fileName);
 
 % data are converted into Dataset object from the PRTools library
 data = prdataset(synth4.X, synth4.Y);
@@ -49,7 +51,7 @@ fprintf('We will use %d classifiers.\n', K);
 errTree = testc(X_test, treeClassifiers);
 
 % calculate errors from the classifiers
-% remark: the prediction for the out-of-bag sets is very long (~40s)
+% remark: the prediction for the out-of-bag sets is very long (~40s) for K = 10
 [testError, oobError] = classifiersTest(X, X_test, treeClassifiers, treeOob);
 
 fprintf('Mean error for the sets of tree classifiers: %f%%\n', mean(cell2mat(errTree)) * 100)
