@@ -50,8 +50,8 @@ function forest = rfLearning(D, L, rndFeat)
     [bag, vec_oob] = drawBootstrap(m, m);
     forest.boot{:, i} = bag;
     forest.oob{:, i} = vec_oob;
-    Dk = D.data(bag, :);
+    Dk = prdataset(D.data(bag, :), D.nlab(bag, :));
     % training a decision tree classifier on a bag
-    forest.trees{i} = treeLearning(D, rndFeat);
+    forest.trees{i} = treeLearning(Dk, rndFeat);
   end
 end

@@ -5,11 +5,11 @@
 
 function probas = rfPredict(X, forest)
 
-	probas = zeros(length(X), 2);
+  [m, n] = size(X);
+  L = forest.nbTrees;
+  probas = zeros(m, forest.nbClasses);
 
-	for i = 1:forest.nbTrees
+	for i = 1:L
 		probas = probas + treePredict(X,forest.trees{i});
 	end
-
-	probas = probas / forest.nbTrees;
 end
