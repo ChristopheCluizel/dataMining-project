@@ -18,12 +18,12 @@ Pour chaque méthode il est possible de modifier dans le ou les fichiers princip
 
 Lancer `main.m` pour lancer Bagging.
 
-## Boosting (1.ensembleClassifier(boosting))
+### Boosting (2.ensembleClassifier(boosting))
 
 Lancer `adaboostMain.m` pour AdaBoost et `adaboostM1Main.m` pour AdaBoost.M1.
 
 Il est possible de modifier le classifieur faible (changer la variable `learningType` en `tree` ou `stump`).
 
-## Random Forest (3.ensembleClassifier(random_forest))
+### Random Forest (3.ensembleClassifier(random_forest))
 
 Lancer `test_rf.m` pour les Random Forest.
