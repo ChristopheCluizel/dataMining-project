@@ -5,8 +5,11 @@ clear all; close all;
 % The mat files have been generated so that it contains a structure with 2 members:
 %  - X: a n by d matrix that contains the input values
 %  - Y: a column vector of n labels 0 or 1
-rawData = load('../../resources/datasets/diabetes.mat');
-% rawData = load('../../resources/datasets/ionosphere.mat');
+
+% fileName = 'ionosphere.mat';
+fileName = 'diabetes.mat';
+rawData = load(strcat('../../resources/datasets/', fileName));
+fprintf('Dataset used: %s\n', fileName);
 
 % Transformation des 0 en -1.
 rawData.Y(rawData.Y == 0) = -1;
@@ -21,7 +24,8 @@ T = 100; % Nombre de classifieurs que l'on veut apprendre.
 
 % Apprentissage des classifieurs sur les données d'apprentissage.
 % Utilisation avec 'tree' ou avec 'stump'
-[classifiers, weights] = adaboostLearn(dataApp, T, 'tree');
+learningType = 'tree';
+[classifiers, weights] = adaboostLearn(dataApp, T, learningType);
 
 % Prédiction via l'ensemble de classifieur sur les données de test.
 predictions = adaboostPred(classifiers, weights, dataTest);
@@ -31,4 +35,4 @@ trueLabels = getlabels(dataTest);
 
 % Calcul du nombre d'erreurs par rapport aux vraies étiquettes.
 testError = sum(predictions ~= trueLabels) / length(predictions) * 100;
-fprintf('Error on dataTest for AdaBoost method with binary stamp classifiers: %f\n', testError);
+fprintf('Error on dataTest for AdaBoost method with %s classifiers: %f\n', learningType, testError);
