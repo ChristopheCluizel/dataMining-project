@@ -7,6 +7,7 @@ X = X.values';
 K = 20; % the number of classifiers
 
 % ========= Statistics moment ==========
+fprintf('============ Statistics moment =========== \n');
 gamma = [];
 for i = 1:K
 	[bag, oob] = drawBootstrap(n, n);
@@ -24,6 +25,7 @@ fprintf('Gamma X: %02f\n', gammaX);
 
 
 % ============ Bagging ==============
+fprintf('\n\n============ Bagging =========== \n');
 % loading a given datasets.
 % The mat files have been generated so that it contains two matrices:
 %  - X: a n by d matrix that contains the input values
@@ -38,15 +40,18 @@ data = prdataset(synth4.X, synth4.Y);
 [mDs, nDs] = size(X_test);
 
 K = 10; % the number of classifiers
+fprintf('We will use %d classifiers.\n', K);
 
 % learn the classifiers
 [treeClassifiers, treeOob] = classifiersLearning(X, K);
 
-% estimating the test error rates for the trained classifiers
+% estimating the test error rates for each trained classifier
 errTree = testc(X_test, treeClassifiers);
-fprintf('Mean error for the sets of tree classifiers: %f\n', mean(cell2mat(errTree)))
 
 % calculate errors from the classifiers
+% remark: the prediction for the out-of-bag sets is very long (~40s)
 [testError, oobError] = classifiersTest(X, X_test, treeClassifiers, treeOob);
-fprintf('Error on X_test for Baggin method with tree classifiers: %f\n', testError);
-fprintf('Error on "Out of bag" for Baggin method with tree classifiers: %f\n', oobError);
+
+fprintf('Mean error for the sets of tree classifiers: %f%%\n', mean(cell2mat(errTree)) * 100)
+fprintf('Error on X_test for Bagging method with tree classifiers: %f%%\n', testError);
+fprintf('Error on "Out of bag" for Bagging method with tree classifiers: %f%%\n', oobError);

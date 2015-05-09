@@ -12,6 +12,7 @@ function [predictions, oobPredictions] = classifiersPredict(X, X_test, classifie
     K = size(classifiers, 2);
 
     % prediction for X_test
+    fprintf('Time for prediction for the X_test set: ');
     tic
         label = zeros(mTest, K);
         for i = 1:K
@@ -24,6 +25,8 @@ function [predictions, oobPredictions] = classifiersPredict(X, X_test, classifie
     toc
 
     % prediction for out-of-bag
+    fprintf('remark: the prediction for the out-of-bag takes some time (~40s)\n');
+    fprintf('Time for prediction for the out-of-bag sets: ');
     tic
         oobPredictions = zeros(m, 1);
         nClasses = max(X.nlab); % the number of different labels
@@ -41,4 +44,5 @@ function [predictions, oobPredictions] = classifiersPredict(X, X_test, classifie
             oobPredictions(i, 1) = ind;
         end
     toc
+    fprintf('\n');
 end

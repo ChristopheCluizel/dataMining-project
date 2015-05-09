@@ -11,6 +11,6 @@ function [error, oobError] = classifiersTest(X, X_test, classifiers, oob)
 
     [predictions, oobPredictions] = classifiersPredict(X, X_test, classifiers, oob);
 
-    error = 1 - (sum(predictions == X_test.nlab) / mTest);
-    oobError = 1 - (sum(oobPredictions(:, 1) == X.nlab) / m);
+    error = (1 - (sum(predictions == X_test.nlab) / mTest)) * 100;
+    oobError = (1 - (sum(oobPredictions(:, 1) == X.nlab) / m)) * 100;
 end
