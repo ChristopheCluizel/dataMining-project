@@ -9,16 +9,20 @@ clear all; close all;
 rawData = load('../../resources/datasets/synth8.mat');
 % rawData = load('../../resources/datasets/segment.mat');
 
-% creation of prtools dataset
+% Création du PRDataSet de la bibliothèque PRTools.
 data = prdataset(rawData.X, rawData.Y);
+
+% Séparation des données en données d'apprentissage et en données de test.
 [dataApp, dataTest] = gendat(data, 0.6);
 
-T = 600; % the number of classifiers
+T = 20; % Nombre de classifieurs que l'on veut apprendre.
 
-% create a new structure and learn
-[classifiers, weights] = adaboostM1Learn(dataApp, T);
+% Apprentissage des classifieurs sur les données d'apprentissage.
+[classifiers, weights] = adaboostM1Learn(dataApp, T, 'tree');
 
+% Prédiction via l'ensemble de classifieur sur les données de test.
 predictions = adaboostM1Pred(classifiers, weights, dataTest);
 
-testError = length(find(predictions ~= getlabels(dataTest))) / length(predictions) * 100;
+% Calcul du nombre d'erreurs par rapport aux vraies étiquettes.
+testError = sum(predictions ~= getlabels(dataTest)) / length(predictions) * 100;
 fprintf('Error on dataTest for AdaBoost.M1 method with binary stamp classifiers: %f\n', testError);
